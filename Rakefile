@@ -10,6 +10,9 @@ task :run => "Gemfile.lock" do
   Sinatra::Application.run!
 end
 
+desc "bundle ruby gems"
+task :bundle => "Gemfile.lock"
+
 # need to touch Gemfile.lock as bundle doesn't touch the file if there is no change
 file "Gemfile.lock" => "Gemfile" do
   sh "bundle && touch Gemfile.lock"
