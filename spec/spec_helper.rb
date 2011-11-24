@@ -1,3 +1,8 @@
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start
+end
+
 require File.join(File.dirname(__FILE__), '..', 'app.rb')
 
 require 'sinatra'

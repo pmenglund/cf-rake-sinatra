@@ -34,7 +34,21 @@ file "Gemfile.lock" => "Gemfile" do
 end
 
 desc "run specs"
-RSpec::Core::RakeTask.new
+RSpec::Core::RakeTask.new(:spec)
+
+namespace :coverage do
+  desc "run rspec code coverage"
+  task :spec do
+    ENV['COVERAGE'] = "true"
+    Rake::Task[:spec].execute
+  end
+
+  desc "run cucumber code coverage"
+  task :feature do
+    ENV['COVERAGE'] = "true"
+    Rake::Task[:features].execute
+  end
+end
 
 Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts = "--format progress"
