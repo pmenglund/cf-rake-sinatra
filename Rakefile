@@ -1,6 +1,7 @@
 VMC_APP_NAME = "cf-rake-sinatra"
 
 require 'rspec/core/rake_task'
+require 'cucumber/rake/task'
 
 $:.unshift(File.dirname(__FILE__))
 
@@ -35,9 +36,13 @@ end
 desc "run specs"
 RSpec::Core::RakeTask.new
 
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = "--format progress"
+end
+
 namespace :vmc do
   desc "update cloud foundry deployment"
-  task :update => [:bundle, :spec] do
+  task :update => [:bundle, :spec, :features] do
     sh "vmc update #{VMC_APP_NAME}"
   end
 
@@ -49,13 +54,13 @@ end
 
 namespace :git do
   desc "push changes to github"
-  task :push => :spec do
+  task :push => [:spec, :features] do
     outstanding_changes?
     sh "git push"
   end
 
   desc "pull changes from github (with rebase)"
-  task :pull => :spec do
+  task :pull => [:spec, :features] do
     sh "git pull --rebase"
   end
 end
